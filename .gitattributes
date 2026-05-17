@@ -1,0 +1,25 @@
+# Normalize line endings — checked-in files always store LF, working
+# copies on Windows can still use CRLF for shell scripts that need it.
+* text=auto eol=lf
+
+# Force LF on source / config (these always run in Unix-like CI too)
+*.js     text eol=lf
+*.mjs    text eol=lf
+*.cjs    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.ts     text eol=lf
+
+# Allow CRLF only for explicit Windows-only files (none today)
+*.bat    text eol=crlf
+*.ps1    text eol=crlf
+
+# Treat as binary so diff/merge don't try to interpret them
+*.png    binary
+*.jpg    binary
+*.gif    binary
+*.ico    binary
+*.zip    binary
+*.tgz    binary

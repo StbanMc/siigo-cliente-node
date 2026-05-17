@@ -1,0 +1,62 @@
+{
+  "name": "siigo-cliente-node",
+  "version": "0.1.0",
+  "description": "Tiny, zero-dependency Node.js client for the Siigo REST API. LATAM-first, ESM, TypeScript types included.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./errors": {
+      "types": "./types/errors.d.ts",
+      "import": "./src/errors.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./types/index.d.ts",
+  "files": [
+    "src/",
+    "types/",
+    "README.md",
+    "README.es.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test tests/",
+    "test:coverage": "node --test --experimental-test-coverage tests/",
+    "check:zero-deps": "node tools/check-zero-deps.mjs",
+    "lint": "node --check src/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "siigo",
+    "siigo-api",
+    "erp",
+    "colombia",
+    "latam",
+    "contabilidad",
+    "accounting",
+    "rest-api",
+    "sdk",
+    "client",
+    "zero-deps",
+    "esm"
+  ],
+  "author": "Esteban Esquivel <noreply.stbanmc@users.noreply.github.com> (https://github.com/StbanMc)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StbanMc/siigo-cliente-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/StbanMc/siigo-cliente-node/issues"
+  },
+  "homepage": "https://github.com/StbanMc/siigo-cliente-node#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}
