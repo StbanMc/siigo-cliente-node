@@ -18,6 +18,23 @@
 import { createHttpClient } from './http.js';
 import { createTokenProvider } from './auth.js';
 import { SiigoConfigError } from './errors.js';
+import { createCustomersResource } from './resources/customers.js';
+import { createInvoicesResource } from './resources/invoices.js';
+import { createProductsResource } from './resources/products.js';
+import { createVouchersResource } from './resources/vouchers.js';
+import { createCreditNotesResource } from './resources/credit-notes.js';
+import { createPaymentsResource } from './resources/payments.js';
+import { createAccountStatementsResource } from './resources/account-statements.js';
+
+const BUILTIN_RESOURCES = [
+  ['customers', createCustomersResource],
+  ['invoices', createInvoicesResource],
+  ['products', createProductsResource],
+  ['vouchers', createVouchersResource],
+  ['creditNotes', createCreditNotesResource],
+  ['payments', createPaymentsResource],
+  ['accountStatements', createAccountStatementsResource],
+];
 
 const DEFAULT_BASE_URL = 'https://api.siigo.com/v1';
 const DEFAULT_PAGE_SIZE = 100;
@@ -157,6 +174,7 @@ export function createClient(options) {
     },
     async *paginate(path, { params = {}, pageSize = DEFAULT_PAGE_SIZE, signal } = {}) {
       let page = 1;
+      let collected = 0;
       while (page <= PAGINATION_SAFETY_PAGES) {
         const resp = await api.get(path, {
           params: { ...params, page, page_size: pageSize },
@@ -164,10 +182,13 @@ export function createClient(options) {
         });
         const items = Array.isArray(resp) ? resp : Array.isArray(resp?.results) ? resp.results : [];
         for (const item of items) yield item;
+        collected += items.length;
+
+        if (items.length === 0) return;
 
         const total = resp?.pagination?.total_results;
         if (Number.isFinite(total)) {
-          if (page * pageSize >= total) return;
+          if (collected >= total) return;
         } else if (items.length < pageSize) {
           return;
         }
@@ -189,8 +210,15 @@ export function createClient(options) {
     http,
   };
 
-  // Resource namespaces will be attached by `registerResource()` once we
-  // implement them (customers, invoices, products, vouchers, ...).
+  // Attach built-in resource namespaces. Custom resources can still be
+  // added later via `registerResource(client, name, factory)`.
+  for (const [name, factory] of BUILTIN_RESOURCES) {
+    Object.defineProperty(client, name, {
+      value: factory(client.api),
+      enumerable: true,
+      writable: false,
+    });
+  }
 
   return client;
 }
