@@ -3,6 +3,7 @@
 > Tiny, zero-dependency Node.js client for the Siigo REST API.
 > LATAM-first. ESM. TypeScript types included.
 
+[![CI](https://github.com/StbanMc/siigo-cliente-node/actions/workflows/ci.yml/badge.svg)](https://github.com/StbanMc/siigo-cliente-node/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 ![Zero deps](https://img.shields.io/badge/dependencies-0-brightgreen)

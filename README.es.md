@@ -3,6 +3,7 @@
 > Cliente Node.js minimalista y sin dependencias para la API REST de Siigo.
 > Pensado primero en LATAM. ESM. Trae tipos TypeScript.
 
+[![CI](https://github.com/StbanMc/siigo-cliente-node/actions/workflows/ci.yml/badge.svg)](https://github.com/StbanMc/siigo-cliente-node/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 ![Cero deps](https://img.shields.io/badge/dependencies-0-brightgreen)
