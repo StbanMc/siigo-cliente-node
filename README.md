@@ -7,12 +7,11 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 ![Zero deps](https://img.shields.io/badge/dependencies-0-brightgreen)
 
-> **Status: 0.1.0-pre — work in progress.** Core HTTP transport, OAuth2
-> token provider, and the `createClient()` factory are in. Resources
-> (customers, invoices, products, vouchers, credit-notes, payments,
-> account-statements) land next. The first published `0.1.0` will ship
-> with full CRUD on customers/invoices/products and CI matrix on Node
-> 18/20/22.
+> **Status: 0.1.0 — first public release.** Resources for customers,
+> invoices, products, vouchers, credit-notes, payments
+> (payment-types catalog), and account-statements are in. CI matrix
+> on Node 18/20/22 × Ubuntu/macOS/Windows. Stability promise lands
+> with v1.0.0.
 
 [Leer en español](README.es.md)
 
@@ -55,21 +54,35 @@ const client = createClient({
   accessKey: process.env.SIIGO_ACCESS_KEY,
 });
 
-// Low-level API (always available)
-const customer = await client.api.get('/customers/12345');
+// Resource namespaces (recommended)
+const customer = await client.customers.findByIdentification('900123456');
+const invoice  = await client.invoices.create({ document: { id: 24446 }, /* … */ });
+const pdf      = await client.invoices.getPdfLink(invoice.id);
 
-// Paginate a collection lazily
-for await (const invoice of client.api.paginate('/invoices', {
-  params: { created_start: '2026-01-01' },
-})) {
-  console.log(invoice.id, invoice.total);
+// Paginate lazily
+for await (const inv of client.invoices.paginate({ date_start: '2026-01-01' })) {
+  console.log(inv.id, inv.total);
 }
 
-// Or collect everything at once
-const products = await client.api.collect('/products', { params: { active: true } });
+// Drop down to the low-level API anytime
+const raw = await client.api.get('/customers/12345');
 ```
 
-> Resource namespaces (`client.customers.list()`, `client.invoices.create()`, …) are landing in the next commits.
+## Resources
+
+| Namespace               | Methods                                                                   |
+|-------------------------|---------------------------------------------------------------------------|
+| `client.customers`      | `list`, `paginate`, `getById`, `findByIdentification`, `create`, `update`, `delete` |
+| `client.invoices`       | `list`, `paginate`, `getById`, `create`, `stamp`, `getPdfLink`            |
+| `client.products`       | `list`, `paginate`, `getById`, `findByCode`, `create`, `update`, `delete` |
+| `client.vouchers`       | `list`, `paginate`, `getById`, `create`                                   |
+| `client.creditNotes`    | `list`, `paginate`, `getById`, `create`                                   |
+| `client.payments`       | `list`, `paginate`, `getById` (payment-types catalog)                     |
+| `client.accountStatements` | `list`, `paginate` (`{ path }` override supported)                     |
+
+Need an endpoint that isn't here yet? Use `client.api.get/post/put/patch/delete`,
+or open a [feature request](https://github.com/StbanMc/siigo-cliente-node/issues/new/choose).
+You can also attach your own resources with `registerResource(client, name, factory)`.
 
 ---
 

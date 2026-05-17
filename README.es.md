@@ -7,12 +7,11 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 ![Cero deps](https://img.shields.io/badge/dependencies-0-brightgreen)
 
-> **Estado: 0.1.0-pre — en progreso.** El transporte HTTP, el proveedor
-> de tokens OAuth2 y la fábrica `createClient()` ya están funcionando.
-> Los recursos (clientes, facturas, productos, comprobantes, notas
-> crédito, pagos, estados de cuenta) llegan en los próximos commits.
-> El primer release publicado `0.1.0` va a traer CRUD completo de
-> clientes/facturas/productos + CI en Node 18/20/22.
+> **Estado: 0.1.0 — primer release público.** Trae recursos para
+> clientes, facturas, productos, comprobantes, notas crédito, pagos
+> (catálogo de payment-types) y estados de cuenta. CI matrix en Node
+> 18/20/22 × Ubuntu/macOS/Windows. La promesa de estabilidad llega
+> con v1.0.0.
 
 [Read in English](README.md)
 
@@ -55,21 +54,36 @@ const client = createClient({
   accessKey: process.env.SIIGO_ACCESS_KEY,
 });
 
-// API de bajo nivel (siempre disponible)
-const cliente = await client.api.get('/customers/12345');
+// Namespaces por recurso (recomendado)
+const cliente = await client.customers.findByIdentification('900123456');
+const factura = await client.invoices.create({ document: { id: 24446 }, /* … */ });
+const pdf     = await client.invoices.getPdfLink(factura.id);
 
-// Paginar una colección de forma perezosa
-for await (const factura of client.api.paginate('/invoices', {
-  params: { created_start: '2026-01-01' },
-})) {
-  console.log(factura.id, factura.total);
+// Paginar de forma perezosa
+for await (const f of client.invoices.paginate({ date_start: '2026-01-01' })) {
+  console.log(f.id, f.total);
 }
 
-// O traerlo todo de un saque
-const productos = await client.api.collect('/products', { params: { active: true } });
+// Bajar al API low-level cuando quieras
+const raw = await client.api.get('/customers/12345');
 ```
 
-> Los namespaces por recurso (`client.customers.list()`, `client.invoices.create()`, …) llegan en los próximos commits.
+## Recursos
+
+| Namespace                  | Métodos                                                                   |
+|----------------------------|---------------------------------------------------------------------------|
+| `client.customers`         | `list`, `paginate`, `getById`, `findByIdentification`, `create`, `update`, `delete` |
+| `client.invoices`          | `list`, `paginate`, `getById`, `create`, `stamp`, `getPdfLink`            |
+| `client.products`          | `list`, `paginate`, `getById`, `findByCode`, `create`, `update`, `delete` |
+| `client.vouchers`          | `list`, `paginate`, `getById`, `create`                                   |
+| `client.creditNotes`       | `list`, `paginate`, `getById`, `create`                                   |
+| `client.payments`          | `list`, `paginate`, `getById` (catálogo de payment-types)                 |
+| `client.accountStatements` | `list`, `paginate` (acepta `{ path }` para override)                      |
+
+¿Te falta un endpoint? Usa `client.api.get/post/put/patch/delete` o abre
+un [feature request](https://github.com/StbanMc/siigo-cliente-node/issues/new/choose).
+También puedes anexar tus propios recursos con
+`registerResource(client, name, factory)`.
 
 ---
 
