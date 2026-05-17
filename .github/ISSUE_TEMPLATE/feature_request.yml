@@ -1,0 +1,35 @@
+name: Feature request / missing endpoint
+description: Suggest a new resource, method, or improvement.
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: What problem are you trying to solve?
+      placeholder: |
+        I'm integrating Siigo with X. Today I have to drop down to
+        `client.api.get(...)` because there's no namespace for …
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: What would the call look like from the caller's perspective?
+      render: javascript
+
+  - type: input
+    id: siigo_docs
+    attributes:
+      label: Siigo docs URL (if applicable)
+      placeholder: "https://siigoapi.docs.apiary.io/#…"
+
+  - type: checkboxes
+    id: zero_deps
+    attributes:
+      label: Constraints
+      options:
+        - label: I understand this project is zero-deps and stays that way.
+          required: true

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/StbanMc/siigo-cliente-node/security/advisories/new
+    about: Please report security issues privately, not in public issues.
+  - name: Siigo API itself
+    url: https://siigoapi.docs.apiary.io/
+    about: Bugs in Siigo's API (not this SDK) should be reported to Siigo directly.

@@ -1,0 +1,65 @@
+name: Bug report
+description: Something is wrong with the SDK.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report. The more concrete the
+        repro, the faster I can help. **Do not paste real `access_key`
+        values, real customer NITs, or production data of any kind.**
+
+  - type: input
+    id: version
+    attributes:
+      label: siigo-cliente-node version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+      placeholder: "20.18.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: Describe the actual behavior. Include error stack traces.
+      placeholder: |
+        I called `client.customers.list({...})` and got …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: Smallest code snippet that triggers the bug.
+      render: javascript
+    validations:
+      required: true
